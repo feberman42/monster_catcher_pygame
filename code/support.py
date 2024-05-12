@@ -63,3 +63,19 @@ def coast_importer(cols, rows, *path):
 		for key, pos in sides.items():
 			new_dict[terrain][key] = [frame_dict[(pos[0] + index * 3, pos[1] + row)] for row in range(0, rows, 3)]
 	return new_dict
+
+def character_import(cols: int, rows: int, *path: tuple[str]):
+	frame_dict = import_tilemap(cols, rows, *path)
+	new_dict = {}
+	for row, direction in enumerate(('down', 'left', 'right', 'up')):
+		new_dict[direction] = [frame_dict[(col, row)] for col in range(cols)]
+		new_dict[f'{direction}_idle'] = [frame_dict[0, row]]
+	return new_dict
+
+def all_characters_import(*path: tuple[str]):
+	new_dict = {}
+	for dir_path, dir_names, file_names in walk(join(*path)):
+		for file in file_names:
+			image_name = file.split('.')[0]
+			new_dict[image_name] = character_import(4, 4, *path, image_name)
+	return new_dict
