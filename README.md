@@ -2,3 +2,5 @@
 ### active project WIP
 
 Following this tutorial by Clear Code https://youtu.be/fo4e3njyGy0?si=OQzKBUwQ-n0sEp3D
+
+I am planning to incorporate assets from ["Battle for Wesnoth"](https://www.wesnoth.org/).
