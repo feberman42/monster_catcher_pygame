@@ -18,7 +18,9 @@ class Entity(pygame.sprite.Sprite):
 		# sprite setup
 		self.image = self.frames[self.get_state()][self.frame_index]
 		self.rect = self.image.get_frect(center = pos)
+		self.hitbox = self.rect.inflate(-self.rect.width / 2, -60)
 		self.y_sort = self.rect.bottom
+
 
 	def animate(self, dt):
 		self.frame_index += ANIMATION_SPEED * dt
@@ -41,8 +43,9 @@ class Character(Entity):
 		pass
 
 class Player(Entity):
-	def __init__(self, pos: tuple[int], frames:dict, start_dir: str, groups: Group) -> None:
+	def __init__(self, pos: tuple[int], frames:dict, start_dir: str, groups: Group, collision_sprites) -> None:
 		super().__init__(pos, frames, start_dir, groups)
+		self.collision_sprites = collision_sprites
 
 	def input(self) -> None:
 		keys = pygame.key.get_pressed()
@@ -56,9 +59,32 @@ class Player(Entity):
 		if keys[pygame.K_RIGHT]:
 			input_vector.x += 1
 		self.direction = input_vector
+		if self.direction:
+			self.direction.normalize_ip()
 
 	def move(self, dt: float) -> None:
-		self.rect.center += self.direction * 200 * dt
+		self.rect.centerx += self.direction.x * 200 * dt
+		self.hitbox.centerx = self.rect.centerx
+		self.collisions('horizontal')
+		self.rect.centery += self.direction.y * 200 * dt
+		self.hitbox.centery = self.rect.centery
+		self.collisions('vertical')
+
+	def collisions(self, axis):
+		for sprite in self.collision_sprites:
+			if sprite.hitbox.colliderect(self.hitbox):
+				if axis  == 'horizontal':
+					if self.direction.x > 0:
+						self.hitbox.right = sprite.hitbox.left
+					else:
+						self.hitbox.left = sprite.hitbox.right
+					self.rect.centerx = self.hitbox.centerx
+				elif axis == 'vertical':
+					if self.direction.y > 0:
+						self.hitbox.bottom = sprite.hitbox.top
+					else:
+						self.hitbox.top = sprite.hitbox.bottom
+					self.rect.centery = self.hitbox.centery
 
 	def update(self, dt: float) -> None:
 		self.y_sort = self.rect.bottom

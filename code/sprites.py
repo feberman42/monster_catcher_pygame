@@ -11,6 +11,17 @@ class Sprite(pygame.sprite.Sprite):
 		self.rect = self.image.get_frect(topleft = pos)
 		self.z_layer = layer
 		self.y_sort = self.rect.bottom
+		self.hitbox = self.rect.copy()
+
+class CollidableSprite(Sprite):
+	def __init__(self, pos: tuple[int], surf: Surface, groups: Group, layer=WORLD_LAYERS['main']) -> None:
+		super().__init__(pos, surf, groups, layer)
+		self.hitbox.scale_by_ip(1, 0.3)
+
+class BorderSprite(Sprite):
+	def __init__(self, pos: tuple[int], surf: Surface, groups: Group) -> None:
+		super().__init__(pos, surf, groups)
+		self.hitbox = self.rect.copy()
 
 class MonsterPatchSprite(Sprite):
 	def __init__(self, pos: tuple[int], surf: Surface, groups: Group, biome) -> None:
