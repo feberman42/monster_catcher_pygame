@@ -6,6 +6,7 @@ from os.path import join
 from sprites import Sprite, AnimatedSprite, MonsterPatchSprite, BorderSprite, CollidableSprite
 from entities import Player, Character
 from groups import AllSprites
+from game_data import TRAINER_DATA
 
 class Game:
 	def __init__(self) -> None:
@@ -16,6 +17,7 @@ class Game:
 
 		self.all_sprites = AllSprites()
 		self.collision_sprites = pygame.sprite.Group()
+		self.character_sprites = pygame.sprite.Group()
 
 		self.import_assets()
 		self.setup(self.tmx_maps['world'], 'house')
@@ -30,6 +32,10 @@ class Game:
 			'water': import_folder('graphics', 'tilesets', 'water'),
 			'coast': coast_importer(24, 12, 'graphics', 'tilesets', 'coast'),
 			'characters': all_characters_import('graphics', 'characters')
+		}
+
+		self.fonts = {
+			'dialog': pygame.font.Font(join('graphics', 'fonts', 'PixeloidSans.ttf'), 30)
 		}
 
 	def setup(self, tmx_map: TiledMap, player_start_position: str) -> None:
@@ -79,7 +85,17 @@ class Game:
 					pos = (obj.x, obj.y),
 					frames = self.overworld_frames['characters'][obj.properties['graphic']],
 					start_dir = obj.properties['direction'],
-					groups = (self.all_sprites, self.collision_sprites))
+					groups = (self.all_sprites, self.collision_sprites, self.character_sprites),
+					character_data = TRAINER_DATA[obj.properties['character_id']])
+
+	def input(self):
+		keys = pygame.key.get_just_pressed()
+		if keys[pygame.K_SPACE]:
+			for character in self.character_sprites:
+				if check_connection(100, self.player, character):
+					self.player.block()
+					character.change_facing_direction(self.player.rect.center)
+					print('dialog')
 
 	def run(self) -> None:
 		while True:
@@ -91,6 +107,7 @@ class Game:
 					exit()
 
 			# game logic
+			self.input()
 			self.all_sprites.update(dt)
 			self.display_surface.fill('black')
 			self.all_sprites.draw(self.player.rect.center)

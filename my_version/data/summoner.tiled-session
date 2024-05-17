@@ -1,0 +1,55 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "tmx/world.tmx",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "tmx/world.tmx": {
+            "scale": 2.7247,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 492.53128784820353,
+                "y": 199.10448856754874
+            }
+        },
+        "tsx/Props.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 2.4806
+        },
+        "tsx/grass.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 1,
+            "scaleInEditor": 2.97
+        },
+        "tsx/props.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "tsx/trone.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 2.8465
+        }
+    },
+    "last.imagePath": "/home/freddy/42/side/monster_catcher/my_version/graphics/objects",
+    "map.lastUsedFormat": "tmx",
+    "openFiles": [
+        "tsx/grass.tsx",
+        "tmx/world.tmx",
+        "tsx/props.tsx"
+    ],
+    "project": "summoner.tiled-project",
+    "recentFiles": [
+        "tsx/grass.tsx",
+        "tsx/props.tsx",
+        "tmx/world.tmx",
+        "tsx/Props.tsx",
+        "tsx/trone.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.type": 1
+}

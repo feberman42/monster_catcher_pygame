@@ -2,6 +2,7 @@ from settings import *
 from os.path import join
 from os import walk
 from pytmx.util_pygame import load_pygame
+from entities import Entity
 
 # imports 
 def import_image(*path, alpha = True, format = 'png'):
@@ -79,3 +80,19 @@ def all_characters_import(*path: tuple[str]):
 			image_name = file.split('.')[0]
 			new_dict[image_name] = character_import(4, 4, *path, image_name)
 	return new_dict
+
+
+# game functions
+
+def check_connection(radius: float, entity: Entity, target: Entity, tolerance = 30) -> bool:
+	relation = vector(target.rect.center) - vector(entity.rect.center)
+	if relation.length() < radius:
+		if abs(relation.y) < tolerance:
+			if ((entity.facing_direction == 'left' and relation.x < 0) or 
+				(entity.facing_direction == 'right' and relation.x > 0)):
+				return True
+		elif abs(relation.x) < tolerance:
+			if ((entity.facing_direction == 'up' and relation.y < 0) or 
+				(entity.facing_direction == 'down' and relation.y > 0)):
+				return True
+	return False

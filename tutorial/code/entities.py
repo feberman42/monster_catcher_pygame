@@ -14,6 +14,7 @@ class Entity(pygame.sprite.Sprite):
 		# movement
 		self.direction = vector()
 		self.speed = 250
+		self.blocked = False
 
 		# sprite setup
 		self.image = self.frames[self.get_state()][self.frame_index]
@@ -34,13 +35,28 @@ class Entity(pygame.sprite.Sprite):
 		elif (self.direction.y > 0): self.facing_direction = 'down'
 
 		return (f'{self.facing_direction}{"" if moving else "_idle"}')
+	
+	def change_facing_direction(self, target_pos):
+		relation = vector(target_pos) - vector(self.rect.center)
+		if abs(relation.y) < 30:
+			self.facing_direction = 'right' if relation.x > 0 else 'left'
+		elif abs(relation.x) < 30:
+			self.facing_direction = 'down' if relation.y > 0 else 'up'
+
+	def block(self):
+		self.blocked = True
+		self.direction = vector(0, 0)
+	
+	def unblock(self):
+		self.blocked = False
 
 class Character(Entity):
-	def __init__(self, pos: tuple[int], frames: dict, start_dir: str, groups: Group) -> None:
+	def __init__(self, pos: tuple[int], frames: dict, start_dir: str, groups: Group, character_data) -> None:
 		super().__init__(pos, frames, start_dir, groups)
+		print(character_data)
 	
 	def update(self, dt) -> None:
-		pass
+		self.animate(dt)
 
 class Player(Entity):
 	def __init__(self, pos: tuple[int], frames:dict, start_dir: str, groups: Group, collision_sprites) -> None:
@@ -88,6 +104,7 @@ class Player(Entity):
 
 	def update(self, dt: float) -> None:
 		self.y_sort = self.rect.bottom
-		self.input()
-		self.move(dt)
+		if not self.blocked:
+			self.input()
+			self.move(dt)
 		self.animate(dt)
