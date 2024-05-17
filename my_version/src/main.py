@@ -1,9 +1,10 @@
 from config import *
 import pytmx
 from sys import exit
-from os.path import join
 from sprites import Sprite
 from groups import VisibleSprites
+from enitities import Player
+from import_utils import *
 
 class Game:
 	def __init__(self) -> None:
@@ -23,13 +24,22 @@ class Game:
 			'test': pytmx.load_pygame(join(PATH ,'..', 'data', 'tmx', 'world.tmx'))
 		}
 
+		# character frames
+		self.character_frames = {
+			'player': import_char(PATH, '..', 'graphics', 'characters', 'player')
+		}
+
 	def setup(self) -> None:
+		# ground
 		for x, y, surf in self.tmx_maps['test'].get_layer_by_name('Ground').tiles():
 			Sprite((x * TILE_SIZE, y * TILE_SIZE), surf, self.visible_sprites)
 
+		# objects
 		for obj in self.tmx_maps['test'].get_layer_by_name('props'):
-			print(obj)
-			Sprite((obj.x, obj.y), obj.image, self.visible_sprites)
+			Sprite((int(obj.x), int(obj.y)), obj.image, self.visible_sprites)
+
+		# entities
+		self.player = Player((0, 0), self.character_frames['player'], self.visible_sprites)
 
 	
 	def run(self) -> None:
@@ -40,8 +50,8 @@ class Game:
 				if event.type == pygame.QUIT:
 					pygame.quit()
 					exit()
-
-			self.visible_sprites.draw()
+			self.visible_sprites.update(dt)
+			self.visible_sprites.draw(self.player.rect.center)
 			pygame.display.update()
 
 if __name__ == '__main__':

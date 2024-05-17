@@ -8,7 +8,8 @@ class Entity(pygame.sprite.Sprite):
 		self.z_layer = WORLD_LAYERS['main']
 
 		# graphics
-		self.frame_index, self.frames = 0, frames
+		self.frame_index = 0
+		self.frames = frames
 		self.facing_direction = start_dir
 
 		# movement

@@ -1,5 +1,7 @@
 import pygame
-from os.path import dirname
+from pygame.math import Vector2 as vector
+from os.path import dirname, join
+from os import walk
 
 WIN_WIDTH = 1280
 WIN_HEIGHT = 720
